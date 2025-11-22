@@ -1,0 +1,1116 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Botanical Garden - Flower Recommendations</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <style>
+        :root {
+            --primary-brown: #8B6F47;
+            --primary-green: #6B8E6F;
+            --secondary-brown: #D4A574;
+            --light-cream: #F5F1E8;
+            --dark-brown: #5C4033;
+            --soft-green: #9BA89B;
+            --accent-green: #7A9B7F;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: var(--light-cream);
+            color: var(--dark-brown);
+            line-height: 1.6;
+        }
+
+
+        /* Navigation */
+        nav {
+            background: linear-gradient(135deg, var(--primary-brown) 0%, var(--primary-green) 100%);
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+
+        .navbar-brand {
+            font-weight: bold;
+            font-size: 1.5rem;
+            color: white !important;
+            letter-spacing: 1px;
+        }
+
+        .nav-link {
+            color: rgba(255, 255, 255, 0.9) !important;
+            margin: 0 0.5rem;
+            transition: color 0.3s ease;
+        }
+
+        .nav-link:hover {
+            color: var(--light-cream) !important;
+        }
+
+        /* Hero Section */
+        .hero {
+            background: linear-gradient(135deg, rgba(107, 142, 111, 0.9) 0%, rgba(139, 111, 71, 0.9) 100%),
+                        url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 600"><path d="M0,300 Q300,200 600,300 T1200,300 L1200,600 L0,600 Z" fill="%23F5F1E8" opacity="0.1"/></svg>');
+            background-size: cover;
+            background-position: center;
+            color: white;
+            padding: 100px 20px;
+            text-align: center;
+            border-bottom: 4px solid var(--secondary-brown);
+        }
+
+        .hero h1 {
+            font-size: 3.5rem;
+            font-weight: 700;
+            margin-bottom: 1rem;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+            letter-spacing: 1px;
+        }
+
+        .hero p {
+            font-size: 1.3rem;
+            margin-bottom: 2rem;
+            opacity: 0.95;
+            max-width: 600px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+
+        .btn-primary-custom {
+            background-color: var(--secondary-brown);
+            border-color: var(--secondary-brown);
+            color: white;
+            padding: 10px 30px;
+            font-weight: 600;
+            border-radius: 25px;
+            transition: all 0.3s ease;
+        }
+
+        .btn-primary-custom:hover {
+            background-color: var(--primary-brown);
+            border-color: var(--primary-brown);
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+        }
+
+        /* Search Section */
+        .search-section {
+            padding: 60px 20px;
+            background-color: white;
+        }
+
+        .search-container {
+            max-width: 600px;
+            margin: 0 auto 40px;
+        }
+
+        .search-title {
+            text-align: center;
+            font-size: 2rem;
+            font-weight: 700;
+            color: var(--primary-brown);
+            margin-bottom: 30px;
+        }
+
+        .search-input-group {
+            position: relative;
+        }
+
+        .search-input-group input {
+            border: 2px solid var(--secondary-brown);
+            border-radius: 25px;
+            padding: 15px 25px;
+            font-size: 1rem;
+            transition: all 0.3s ease;
+        }
+
+        .search-input-group input:focus {
+            border-color: var(--primary-green);
+            box-shadow: 0 0 0 0.2rem rgba(107, 142, 111, 0.25);
+            outline: none;
+        }
+
+        .search-input-group button {
+            position: absolute;
+            right: 5px;
+            top: 50%;
+            transform: translateY(-50%);
+            background: none;
+            border: none;
+            color: var(--primary-green);
+            cursor: pointer;
+            font-size: 1.2rem;
+        }
+
+        /* Tags */
+        .tags-container {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+            justify-content: center;
+            margin-top: 30px;
+        }
+
+        .tag {
+            background-color: var(--light-cream);
+            border: 2px solid var(--primary-green);
+            color: var(--primary-brown);
+            padding: 8px 16px;
+            border-radius: 20px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-weight: 500;
+        }
+
+        .tag:hover {
+            background-color: var(--primary-green);
+            color: white;
+        }
+
+        .tag.active {
+            background-color: var(--primary-green);
+            color: white;
+        }
+
+        /* Recommended Section */
+        .recommended-section {
+            padding: 80px 20px;
+            background: linear-gradient(180deg, var(--light-cream) 0%, rgba(212, 165, 116, 0.1) 100%);
+        }
+
+        .section-title {
+            text-align: center;
+            font-size: 2.5rem;
+            font-weight: 700;
+            color: var(--primary-brown);
+            margin-bottom: 50px;
+            position: relative;
+            padding-bottom: 20px;
+        }
+
+        .section-title::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 60px;
+            height: 3px;
+            background: var(--primary-green);
+        }
+
+        .flower-card {
+            background: white;
+            border-radius: 15px;
+            overflow: hidden;
+            box-shadow: 0 5px 20px rgba(0,0,0,0.08);
+            transition: all 0.3s ease;
+            height: 100%;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .flower-card:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 15px 40px rgba(0,0,0,0.15);
+        }
+
+        .flower-image {
+            width: 100%;
+            height: 200px;
+            object-fit: cover;
+            background: linear-gradient(135deg, var(--light-cream), rgba(212, 165, 116, 0.2));
+        }
+
+        .flower-info {
+            padding: 20px;
+            flex-grow: 1;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .flower-name {
+            font-size: 1.3rem;
+            font-weight: 700;
+            color: var(--primary-brown);
+            margin-bottom: 10px;
+        }
+
+        .flower-description {
+            font-size: 0.95rem;
+            color: #666;
+            margin-bottom: 15px;
+            flex-grow: 1;
+        }
+
+        .flower-tags {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+            margin-bottom: 15px;
+        }
+
+        .flower-tag {
+            background-color: rgba(107, 142, 111, 0.1);
+            color: var(--primary-green);
+            padding: 4px 10px;
+            border-radius: 12px;
+            font-size: 0.8rem;
+            font-weight: 600;
+        }
+
+        .learn-more-btn {
+            background-color: var(--primary-green);
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 20px;
+            cursor: pointer;
+            font-weight: 600;
+            transition: all 0.3s ease;
+            align-self: flex-start;
+        }
+
+        .learn-more-btn:hover {
+            background-color: var(--accent-green);
+            transform: translateX(5px);
+        }
+
+        /* Gardening Tips Section */
+        .gardening-tips-section {
+            padding: 80px 20px;
+            background: white;
+        }
+
+        .tips-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 25px;
+            margin-bottom: 60px;
+        }
+
+        .tip-card {
+            background: linear-gradient(135deg, rgba(212, 165, 116, 0.1) 0%, rgba(107, 142, 111, 0.1) 100%);
+            border-left: 4px solid var(--primary-green);
+            border-radius: 10px;
+            padding: 25px;
+            transition: all 0.3s ease;
+        }
+
+        .tip-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 8px 20px rgba(0,0,0,0.1);
+            background: linear-gradient(135deg, rgba(212, 165, 116, 0.2) 0%, rgba(107, 142, 111, 0.2) 100%);
+        }
+
+        .tip-icon {
+            font-size: 2.5rem;
+            margin-bottom: 15px;
+        }
+
+        .tip-title {
+            font-size: 1.2rem;
+            font-weight: 700;
+            color: var(--primary-brown);
+            margin-bottom: 10px;
+        }
+
+        .tip-description {
+            font-size: 0.95rem;
+            color: #666;
+            line-height: 1.6;
+        }
+
+        /* Specific Flower Search */
+        .flower-search-container {
+            background: linear-gradient(135deg, var(--light-cream) 0%, rgba(212, 165, 116, 0.15) 100%);
+            border-radius: 15px;
+            padding: 40px;
+            max-width: 900px;
+            margin: 0 auto;
+        }
+
+        .flower-search-title {
+            text-align: center;
+            font-size: 1.8rem;
+            font-weight: 700;
+            color: var(--primary-brown);
+            margin-bottom: 30px;
+        }
+
+        .flower-search-input-group {
+            position: relative;
+            max-width: 500px;
+            margin: 0 auto 30px;
+        }
+
+        .flower-search-input-group input {
+            width: 100%;
+            border: 2px solid var(--primary-green);
+            border-radius: 25px;
+            padding: 14px 45px 14px 20px;
+            font-size: 1rem;
+            transition: all 0.3s ease;
+        }
+
+        .flower-search-input-group input:focus {
+            outline: none;
+            border-color: var(--primary-brown);
+            box-shadow: 0 0 0 0.2rem rgba(139, 111, 71, 0.25);
+        }
+
+        .flower-search-input-group button {
+            position: absolute;
+            right: 15px;
+            top: 50%;
+            transform: translateY(-50%);
+            background: none;
+            border: none;
+            color: var(--primary-green);
+            cursor: pointer;
+            font-size: 1.3rem;
+        }
+
+        .flower-search-results {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+            gap: 15px;
+            margin-top: 30px;
+            max-height: 300px;
+            overflow-y: auto;
+        }
+
+        .flower-search-item {
+            background: white;
+            border: 2px solid var(--secondary-brown);
+            border-radius: 10px;
+            padding: 15px;
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .flower-search-item:hover {
+            background: var(--light-cream);
+            border-color: var(--primary-green);
+            transform: scale(1.05);
+        }
+
+        .flower-search-item-name {
+            font-weight: 700;
+            color: var(--primary-brown);
+            margin-bottom: 5px;
+        }
+
+        .flower-search-item-type {
+            font-size: 0.85rem;
+            color: var(--primary-green);
+        }
+
+        .search-no-results {
+            text-align: center;
+            padding: 30px;
+            color: #999;
+            font-style: italic;
+        }
+
+        /* Customer Reviews Slider Section */
+        .reviews-section {
+            padding: 80px 20px;
+            background: linear-gradient(135deg, rgba(212, 165, 116, 0.1) 0%, rgba(107, 142, 111, 0.1) 100%);
+        }
+
+        .reviews-container {
+            max-width: 900px;
+            margin: 0 auto;
+        }
+
+        .reviews-slider {
+            position: relative;
+            overflow: hidden;
+            border-radius: 15px;
+            background: white;
+            box-shadow: 0 10px 40px rgba(0,0,0,0.1);
+        }
+
+        .reviews-track {
+            display: flex;
+            transition: transform 0.6s ease;
+        }
+
+        .review-item {
+            min-width: 100%;
+            padding: 60px 40px;
+            text-align: center;
+            animation: fadeIn 0.6s ease;
+        }
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+            }
+            to {
+                opacity: 1;
+            }
+        }
+
+        .review-stars {
+            font-size: 1.5rem;
+            margin-bottom: 15px;
+            color: var(--secondary-brown);
+            letter-spacing: 3px;
+        }
+
+        .review-text {
+            font-size: 1.1rem;
+            color: #555;
+            margin-bottom: 20px;
+            line-height: 1.8;
+            font-style: italic;
+        }
+
+        .review-author {
+            font-weight: 700;
+            color: var(--primary-brown);
+            font-size: 1rem;
+            margin-bottom: 5px;
+        }
+
+        .review-role {
+            font-size: 0.9rem;
+            color: var(--primary-green);
+        }
+
+        .reviews-controls {
+            position: absolute;
+            bottom: 20px;
+            left: 50%;
+            transform: translateX(-50%);
+            display: flex;
+            gap: 15px;
+            z-index: 10;
+        }
+
+        .review-dot {
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
+            background: rgba(107, 142, 111, 0.3);
+            cursor: pointer;
+            transition: all 0.3s ease;
+            border: 2px solid transparent;
+        }
+
+        .review-dot.active {
+            background: var(--primary-green);
+            transform: scale(1.3);
+        }
+
+        .review-btn {
+            position: absolute;
+            top: 50%;
+            transform: translateY(-50%);
+            background: white;
+            border: 2px solid var(--primary-green);
+            color: var(--primary-green);
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            cursor: pointer;
+            font-size: 1.5rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.3s ease;
+            z-index: 10;
+        }
+
+        .review-btn:hover {
+            background: var(--primary-green);
+            color: white;
+            transform: translateY(-50%) scale(1.1);
+        }
+
+        .review-btn.prev {
+            left: 15px;
+        }
+
+        .review-btn.next {
+            right: 15px;
+        }
+
+        /* Contact Section */
+        .contact-section {
+            padding: 80px 20px;
+            background: white;
+        }
+
+        .contact-container {
+            max-width: 700px;
+            margin: 0 auto;
+        }
+
+        .form-label {
+            color: var(--primary-brown);
+            font-weight: 600;
+            margin-bottom: 10px;
+        }
+
+        .form-control {
+            border: 2px solid var(--secondary-brown);
+            border-radius: 10px;
+            padding: 12px 15px;
+            transition: all 0.3s ease;
+        }
+
+        .form-control:focus {
+            border-color: var(--primary-green);
+            box-shadow: 0 0 0 0.2rem rgba(107, 142, 111, 0.25);
+        }
+
+        textarea.form-control {
+            resize: vertical;
+            min-height: 120px;
+        }
+
+        .submit-btn {
+            width: 100%;
+            background: linear-gradient(135deg, var(--primary-brown) 0%, var(--primary-green) 100%);
+            color: white;
+            border: none;
+            padding: 15px;
+            border-radius: 25px;
+            font-size: 1.1rem;
+            font-weight: 700;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            margin-top: 20px;
+        }
+
+        .submit-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 25px rgba(107, 142, 111, 0.3);
+        }
+
+        /* Footer */
+        footer {
+            background: var(--primary-brown);
+            color: white;
+            text-align: center;
+            padding: 30px 20px;
+            margin-top: 60px;
+        }
+
+        footer p {
+            margin: 0;
+            opacity: 0.9;
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .hero h1 {
+                font-size: 2.5rem;
+            }
+
+            .hero p {
+                font-size: 1rem;
+            }
+
+            .section-title {
+                font-size: 2rem;
+            }
+
+            .search-title {
+                font-size: 1.5rem;
+            }
+
+            .tags-container {
+                padding: 0 15px;
+            }
+
+            .flower-search-container {
+                padding: 25px;
+            }
+
+            .flower-search-results {
+                grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+            }
+
+            .tips-grid {
+                grid-template-columns: 1fr;
+            }
+
+            /* Mobile review slider */
+            .review-item {
+                padding: 40px 20px;
+            }
+
+            .review-text {
+                font-size: 1rem;
+            }
+
+            .review-btn {
+                width: 40px;
+                height: 40px;
+                font-size: 1.2rem;
+            }
+
+            .review-btn.prev {
+                left: 10px;
+            }
+
+            .review-btn.next {
+                right: 10px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Navigation -->
+    <nav class="navbar navbar-expand-lg navbar-light">
+        <div class="container-fluid">
+            <a class="navbar-brand" href="#home">🌺 Flowers Archive</a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+                <span class="navbar-toggler-icon" style="background-image: url('data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 30 30%22><line x1=%225%22 y1=%226%22 x2=%2225%22 y2=%226%22 stroke=%22white%22 stroke-width=%222%22/><line x1=%225%22 y1=%2215%22 x2=%2225%22 y2=%2215%22 stroke=%22white%22 stroke-width=%222%22/><line x1=%225%22 y1=%2224%22 x2=%2225%22 y2=%2224%22 stroke=%22white%22 stroke-width=%222%22/></svg>')"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav ms-auto">
+                    <li class="nav-item"><a class="nav-link" href="#search">Search</a></li>
+                    <li class="nav-item"><a class="nav-link" href="#flowers">Flowers</a></li>
+                    <li class="nav-item"><a class="nav-link" href="#tips">Gardening Tips</a></li>
+                    <li class="nav-item"><a class="nav-link" href="#reviews">Reviews</a></li>
+                    <li class="nav-item"><a class="nav-link" href="#contact">Contact</a></li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Hero Section -->
+    <section class="hero" id="home">
+        <div class="container">
+            <h1>Discover Your Perfect Flower</h1>
+            <p>Explore our curated collection of beautiful flowers and find the perfect recommendation for any occasion or garden</p>
+            <button class="btn-primary-custom" onclick="document.getElementById('search').scrollIntoView({behavior: 'smooth'})">Start Exploring</button>
+        </div>
+    </section>
+
+
+    <!-- Recommended Flowers Section (content skipped for brevity) -->
+    <section class="recommended-section" id="flowers">
+        <div class="container">
+            <h2 class="section-title">Our Recommendations</h2>
+            <div class="row g-4">
+                <!-- Flower Card 1 -->
+                <div class="col-md-6 col-lg-4">
+                    <div class="flower-card">
+                        <img src="/placeholder.svg?height=200&width=300" alt="Rose" class="flower-image">
+                        <div class="flower-info">
+                            <h3 class="flower-name">Rose</h3>
+                            <p class="flower-description">The classic symbol of love and elegance, roses come in various colors and are perfect for any special occasion.</p>
+                            <div class="flower-tags">
+                                <span class="flower-tag">Romantic</span>
+                                <span class="flower-tag">Fragrant</span>
+                            </div>
+                            <button class="learn-more-btn">Learn More</button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Flower Card 2 -->
+                <div class="col-md-6 col-lg-4">
+                    <div class="flower-card">
+                        <img src="/placeholder.svg?height=200&width=300" alt="Sunflower" class="flower-image">
+                        <div class="flower-info">
+                            <h3 class="flower-name">Sunflower</h3>
+                            <p class="flower-description">Radiant and cheerful, sunflowers bring warmth and positivity to any garden or arrangement.</p>
+                            <div class="flower-tags">
+                                <span class="flower-tag">Sunny</span>
+                                <span class="flower-tag">Low Maintenance</span>
+                            </div>
+                            <button class="learn-more-btn">Learn More</button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Flower Card 3 -->
+                <div class="col-md-6 col-lg-4">
+                    <div class="flower-card">
+                        <img src="/placeholder.svg?height=200&width=300" alt="Lavender" class="flower-image">
+                        <div class="flower-info">
+                            <h3 class="flower-name">Lavender</h3>
+                            <p class="flower-description">With its soothing aroma and delicate purple blooms, lavender is perfect for relaxation and gardens.</p>
+                            <div class="flower-tags">
+                                <span class="flower-tag">Fragrant</span>
+                                <span class="flower-tag">Cold Hardy</span>
+                            </div>
+                            <button class="learn-more-btn">Learn More</button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Flower Card 4 -->
+                <div class="col-md-6 col-lg-4">
+                    <div class="flower-card">
+                        <img src="/placeholder.svg?height=200&width=300" alt="Orchid" class="flower-image">
+                        <div class="flower-info">
+                            <h3 class="flower-name">Orchid</h3>
+                            <p class="flower-description">Exotic and sophisticated, orchids add a touch of luxury and elegance to any indoor space.</p>
+                            <div class="flower-tags">
+                                <span class="flower-tag">Tropical</span>
+                                <span class="flower-tag">Elegant</span>
+                            </div>
+                            <button class="learn-more-btn">Learn More</button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Flower Card 5 -->
+                <div class="col-md-6 col-lg-4">
+                    <div class="flower-card">
+                        <img src="/placeholder.svg?height=200&width=300" alt="Daisy" class="flower-image">
+                        <div class="flower-info">
+                            <h3 class="flower-name">Daisy</h3>
+                            <p class="flower-description">Simple yet charming, daisies are timeless flowers that bring joy and innocence to any garden.</p>
+                            <div class="flower-tags">
+                                <span class="flower-tag">Low Maintenance</span>
+                                <span class="flower-tag">Cheerful</span>
+                            </div>
+                            <button class="learn-more-btn">Learn More</button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Flower Card 6 -->
+                <div class="col-md-6 col-lg-4">
+                    <div class="flower-card">
+                        <img src="/placeholder.svg?height=200&width=300" alt="Tulip" class="flower-image">
+                        <div class="flower-info">
+                            <h3 class="flower-name">Tulip</h3>
+                            <p class="flower-description">Vibrant and diverse, tulips are spring favorites available in a stunning rainbow of colors.</p>
+                            <div class="flower-tags">
+                                <span class="flower-tag">Colorful</span>
+                                <span class="flower-tag">Spring</span>
+                            </div>
+                            <button class="learn-more-btn">Learn More</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Gardening Tips Section -->
+    <section class="gardening-tips-section" id="tips">
+        <div class="container">
+            <h2 class="section-title">Gardening Tips & Tricks</h2>
+            
+            <div class="tips-grid">
+                <div class="tip-card">
+                    <div class="tip-icon">💧</div>
+                    <div class="tip-title">Proper Watering</div>
+                    <div class="tip-description">Water your flowers early in the morning to reduce evaporation. Most flowers need 1-2 inches of water per week. Always check soil moisture before watering.</div>
+                </div>
+
+                <div class="tip-card">
+                    <div class="tip-icon">☀️</div>
+                    <div class="tip-title">Sunlight Requirements</div>
+                    <div class="tip-description">Most flowers need 6-8 hours of sunlight daily. Check individual plant requirements—some prefer partial shade. Rotate potted plants for even growth.</div>
+                </div>
+
+                <div class="tip-card">
+                    <div class="tip-icon">🌱</div>
+                    <div class="tip-title">Soil Quality</div>
+                    <div class="tip-description">Use well-draining soil rich in organic matter. Add compost annually to improve soil health. Different flowers may need different soil pH levels.</div>
+                </div>
+
+                <div class="tip-card">
+                    <div class="tip-icon">✂️</div>
+                    <div class="tip-title">Pruning & Deadheading</div>
+                    <div class="tip-description">Remove dead flowers to encourage new blooms. Prune in early spring or after flowering. Use clean, sharp tools to prevent disease spread.</div>
+                </div>
+
+                <div class="tip-card">
+                    <div class="tip-icon">🍽️</div>
+                    <div class="tip-title">Fertilizing</div>
+                    <div class="tip-description">Feed flowers during growing season (spring/summer). Use balanced fertilizer or flower-specific formulas. Follow package instructions to avoid over-fertilizing.</div>
+                </div>
+
+                <div class="tip-card">
+                    <div class="tip-icon">🐛</div>
+                    <div class="tip-title">Pest Control</div>
+                    <div class="tip-description">Inspect plants regularly for pests and diseases. Use natural solutions like neem oil or insecticidal soap. Remove affected leaves promptly to prevent spread.</div>
+                </div>
+            </div>
+
+            <!-- Specific Flower Search -->
+            <div class="flower-search-container">
+                <h3 class="flower-search-title">Search for Specific Flower Tips</h3>
+                <div class="flower-search-input-group">
+                    <input type="text" id="flowerSearchInput" placeholder="Search for a flower (e.g., Rose, Sunflower, Lavender)...">
+                    <button onclick="searchFlowers()">🔍</button>
+                </div>
+                <div id="flowerSearchResults" class="flower-search-results">
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Customer Reviews Slider Section - Auto-play reviews carousel -->
+    <section class="reviews-section" id="reviews">
+        <div class="reviews-container">
+            <h2 class="section-title">Customer Reviews</h2>
+            <div class="reviews-slider">
+                <div class="reviews-track" id="reviewsTrack">
+                    <div class="review-item">
+                        <div class="review-stars">★★★★★</div>
+                        <p class="review-text">"The flowers I received were absolutely stunning! Fresh, vibrant, and beautifully arranged. My garden has never looked better. Highly recommend to any flower enthusiast!"</p>
+                        <div class="review-author">Sarah Mitchell</div>
+                        <div class="review-role">Garden Enthusiast</div>
+                    </div>
+
+                    <div class="review-item">
+                        <div class="review-stars">★★★★★</div>
+                        <p class="review-text">"Amazing quality and fantastic customer service! The recommendations were perfect for my space. I've already ordered twice and plan to make it a regular thing."</p>
+                        <div class="review-author">James Rodriguez</div>
+                        <div class="review-role">Landscape Designer</div>
+                    </div>
+
+                    <div class="review-item">
+                        <div class="review-stars">★★★★★</div>
+                        <p class="review-text">"This is the best flower service I've ever used. They really helped me find the perfect blooms for my wedding. Professional, reliable, and beautiful results!"</p>
+                        <div class="review-author">Emily Chen</div>
+                        <div class="review-role">Event Planner</div>
+                    </div>
+
+                    <div class="review-item">
+                        <div class="review-stars">★★★★★</div>
+                        <p class="review-text">"Exceptional service from start to finish. The team's knowledge about different flower varieties is impressive. My balcony looks like a botanical paradise now!"</p>
+                        <div class="review-author">Michael Thompson</div>
+                        <div class="review-role">Happy Customer</div>
+                    </div>
+
+                    <div class="review-item">
+                        <div class="review-stars">★★★★★</div>
+                        <p class="review-text">"I was blown away by the freshness and diversity of the flowers. The care instructions were detailed and helpful. Will definitely be a returning customer!"</p>
+                        <div class="review-author">Jessica Anderson</div>
+                        <div class="review-role">Nature Lover</div>
+                    </div>
+                </div>
+
+                <button class="review-btn prev" onclick="changeReview(-1)">&#10094;</button>
+                <button class="review-btn next" onclick="changeReview(1)">&#10095;</button>
+
+                <div class="reviews-controls">
+                    <span class="review-dot active" onclick="goToReview(0)"></span>
+                    <span class="review-dot" onclick="goToReview(1)"></span>
+                    <span class="review-dot" onclick="goToReview(2)"></span>
+                    <span class="review-dot" onclick="goToReview(3)"></span>
+                    <span class="review-dot" onclick="goToReview(4)"></span>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Contact Section -->
+    <section class="contact-section" id="contact">
+        <div class="container">
+            <h2 class="section-title">Get In Touch</h2>
+            <div class="contact-container">
+                <p style="text-align: center; margin-bottom: 40px; color: #666; font-size: 1.05rem;">
+                    Have questions about our flowers? Want recommendations? We'd love to hear from you!
+                </p>
+                <form>
+                    <div class="mb-3">
+                        <label for="name" class="form-label">Full Name</label>
+                        <input type="text" class="form-control" id="name" placeholder="John Doe" required>
+                    </div>
+
+                    <div class="mb-3">
+                        <label for="email" class="form-label">Email Address</label>
+                        <input type="email" class="form-control" id="email" placeholder="you@example.com" required>
+                    </div>
+
+                    <div class="mb-3">
+                        <label for="subject" class="form-label">Subject</label>
+                        <input type="text" class="form-control" id="subject" placeholder="How can we help?" required>
+                    </div>
+
+                    <div class="mb-3">
+                        <label for="message" class="form-label">Message</label>
+                        <textarea class="form-control" id="message" placeholder="Tell us more about your flower inquiry..." required></textarea>
+                    </div>
+
+                    <div class="mb-3">
+                        <label for="preference" class="form-label">Flower Preference</label>
+                        <select class="form-control" id="preference">
+                            <option value="">Select a flower type...</option>
+                            <option value="rose">Roses</option>
+                            <option value="sunflower">Sunflowers</option>
+                            <option value="lavender">Lavender</option>
+                            <option value="orchid">Orchids</option>
+                            <option value="daisy">Daisies</option>
+                            <option value="tulip">Tulips</option>
+                            <option value="other">Other</option>
+                        </select>
+                    </div>
+
+                    <button type="submit" class="submit-btn">Send Message</button>
+                </form>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer>
+        <div class="container">
+            <p>&copy; 2025 Botanical Archive. Handpicked flowers for every occasion. All rights reserved.</p>
+            <p style="margin-top: 15px; font-size: 0.9rem;">Follow us on social media for daily flower inspiration 🌿</p>
+        </div>
+    </footer>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script>
+        let currentReview = 0;
+        const reviewItems = document.querySelectorAll('.review-item');
+        const reviewDots = document.querySelectorAll('.review-dot');
+        const reviewsTrack = document.getElementById('reviewsTrack');
+        const totalReviews = reviewItems.length;
+        let autoPlayInterval;
+
+        // Function to update slider position
+        function updateSlider() {
+            const offset = -currentReview * 100;
+            reviewsTrack.style.transform = `translateX(${offset}%)`;
+            
+            // Update active dot
+            reviewDots.forEach((dot, index) => {
+                dot.classList.toggle('active', index === currentReview);
+            });
+        }
+
+        // Change review function
+        function changeReview(direction) {
+            currentReview = (currentReview + direction + totalReviews) % totalReviews;
+            updateSlider();
+            resetAutoPlay();
+        }
+
+        // Go to specific review
+        function goToReview(index) {
+            currentReview = index;
+            updateSlider();
+            resetAutoPlay();
+        }
+
+        // Auto-play function
+        function startAutoPlay() {
+            autoPlayInterval = setInterval(() => {
+                currentReview = (currentReview + 1) % totalReviews;
+                updateSlider();
+            }, 5000); // Change review every 5 seconds
+        }
+
+        // Reset auto-play when user interacts
+        function resetAutoPlay() {
+            clearInterval(autoPlayInterval);
+            startAutoPlay();
+        }
+
+        // Initialize slider
+        document.addEventListener('DOMContentLoaded', function() {
+            updateSlider();
+            startAutoPlay();
+        });
+
+        // Original form and search functionality
+        document.querySelector('form').addEventListener('submit', function(e) {
+            e.preventDefault();
+            alert('Thank you for your message! We will get back to you soon.');
+            this.reset();
+        });
+
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function (e) {
+                e.preventDefault();
+                const target = document.querySelector(this.getAttribute('href'));
+                if (target) {
+                    target.scrollIntoView({ behavior: 'smooth', block: 'start' });
+                }
+            });
+        });
+
+        const flowerDatabase = [
+            { name: 'Rose', type: 'Romantic & Elegant', care: 'Water regularly, needs 6-8 hrs sun, prune in spring' },
+            { name: 'Sunflower', type: 'Cheerful & Tall', care: 'Full sun, moderate water, stake for support' },
+            { name: 'Lavender', type: 'Fragrant & Calming', care: 'Well-draining soil, drought tolerant, loves sun' },
+            { name: 'Orchid', type: 'Exotic & Delicate', care: 'Indirect light, high humidity, water weekly' },
+            { name: 'Daisy', type: 'Simple & Cheerful', care: 'Full sun, minimal care, self-seeding' },
+            { name: 'Tulip', type: 'Colorful & Spring', care: 'Plant in fall, prefers cool weather, well-draining soil' },
+            { name: 'Peony', type: 'Full & Fragrant', care: 'Afternoon shade in hot climates, needs support' },
+            { name: 'Lily', type: 'Elegant & Tall', care: 'Well-draining soil, full sun, deadhead for longevity' },
+            { name: 'Bluebell', type: 'Delicate & Blue', care: 'Partial shade, moist soil, naturalizes well' },
+            { name: 'Hydrangea', type: 'Large & Showy', care: 'Partial shade, consistent moisture, acidic soil' },
+            { name: 'Hibiscus', type: 'Tropical & Bold', care: 'Full sun, warm climate, regular watering' },
+            { name: 'Carnation', type: 'Durable & Colorful', care: 'Full sun, well-draining soil, deadhead regularly' }
+        ];
+
+        function searchFlowers() {
+            const searchInput = document.getElementById('flowerSearchInput').value.toLowerCase();
+            const resultsContainer = document.getElementById('flowerSearchResults');
+            resultsContainer.innerHTML = '';
+
+            if (searchInput.trim() === '') {
+                resultsContainer.innerHTML = '<div class="search-no-results">Start typing to search for flowers...</div>';
+                return;
+            }
+
+            const results = flowerDatabase.filter(flower => 
+                flower.name.toLowerCase().includes(searchInput) || 
+                flower.type.toLowerCase().includes(searchInput)
+            );
+
+            if (results.length === 0) {
+                resultsContainer.innerHTML = '<div class="search-no-results">No flowers found. Try a different search term.</div>';
+                return;
+            }
+
+            results.forEach(flower => {
+                const resultItem = document.createElement('div');
+                resultItem.className = 'flower-search-item';
+                resultItem.innerHTML = `
+                    <div class="flower-search-item-name">${flower.name}</div>
+                    <div class="flower-search-item-type">${flower.type}</div>
+                `;
+                resultItem.onclick = () => showFlowerTip(flower);
+                resultsContainer.appendChild(resultItem);
+            });
+        }
+
+        function showFlowerTip(flower) {
+            alert(`${flower.name}\n\n${flower.type}\n\nCare Tips: ${flower.care}`);
+        }
+
+        document.addEventListener('DOMContentLoaded', function() {
+            const searchInput = document.getElementById('flowerSearchInput');
+            if (searchInput) {
+                searchInput.addEventListener('keyup', function(e) {
+                    if (e.key === 'Enter') {
+                        searchFlowers();
+                    } else {
+                        searchFlowers();
+                    }
+                });
+            }
+        });
+    </script>
+</body>
+</html>
